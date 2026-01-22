@@ -49,11 +49,11 @@ export default function DayDetailModal({ date, habits, completions, onClose }: D
                             <div className="flex items-center gap-2 mt-2">
                                 <div className={`h-1.5 w-16 rounded-full overflow-hidden ${isBatman ? 'bg-gray-800' : 'bg-sand-200'}`}>
                                     <div
-                                        className={`h-full rounded-full ${isBatman ? 'bg-gold-400' : 'bg-brown-500'}`}
+                                        className={`h-full rounded-full ${isBatman ? 'bg-gold-400' : 'bg-sand-500'}`}
                                         style={{ width: `${dayData.completionPercentage}%` }}
                                     ></div>
                                 </div>
-                                <span className={`text-xs font-medium ${isBatman ? 'text-gray-400' : 'text-brown-400'}`}>
+                                <span className={`text-xs font-medium ${isBatman ? 'text-gray-400' : 'text-sand-600'}`}>
                                     {Math.round(dayData.completionPercentage)}% done
                                 </span>
                             </div>
@@ -62,7 +62,7 @@ export default function DayDetailModal({ date, habits, completions, onClose }: D
                             onClick={onClose}
                             className={`p-1.5 rounded-full transition-all duration-200 hover:scale-110 ${isBatman
                                 ? 'bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700'
-                                : 'bg-sand-100 text-brown-400 hover:text-brown-700 hover:bg-sand-200'}`}
+                                : 'bg-sand-100 text-sand-400 hover:text-sand-700 hover:bg-sand-200'}`}
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -105,7 +105,7 @@ export default function DayDetailModal({ date, habits, completions, onClose }: D
                                                         : 'bg-sand-600 border-sand-600 text-white shadow-md'
                                                     : isBatman
                                                         ? 'border-gray-600 group-hover:border-gray-400'
-                                                        : 'border-sand-300 group-hover:border-brown-400'
+                                                        : 'border-sand-300 group-hover:border-sand-400'
                                                 }
                                             `}
                                         >
