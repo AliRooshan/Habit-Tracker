@@ -176,7 +176,6 @@ export default function CalendarView({ habits, completions }: CalendarViewProps)
                         const status = getCompletionStatus(date);
                         const today = isToday(date);
                         const future = isFutureDate(date);
-                        const dateFormatted = format(date, 'yyyy-MM-dd');
 
                         // Determine styles based on status and theme
                         let bgClass = '';
