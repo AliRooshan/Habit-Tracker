@@ -1,0 +1,368 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@100..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* ===================================
+     LUXURY SAND PALETTE (Light)
+     =================================== */
+  --color-sand-50: #fdfcf8;
+  --color-sand-100: #f5f0e6;
+  --color-sand-200: #e8dbc5;
+  --color-sand-300: #dbc2a0;
+  --color-sand-400: #cca67a;
+  --color-sand-500: #bf8b55;
+  --color-sand-600: #a67342;
+  --color-sand-700: #8c5e35;
+  --color-sand-800: #734b2a;
+  --color-sand-900: #5c3b20;
+
+  --color-gold-400: #e6c200;
+  --color-gold-500: #cca300;
+  --color-gold-600: #b38600;
+
+  /* Shadows for days */
+  --shadow-premium:
+    0 4px 6px -1px rgba(0, 0, 0, 0.02),
+    0 10px 15px -3px rgba(166, 115, 66, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+
+  --shadow-premium-hover:
+    0 20px 25px -5px rgba(0, 0, 0, 0.05),
+    0 10px 10px -5px rgba(166, 115, 66, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.8) inset,
+    0 0 20px rgba(191, 139, 85, 0.2);
+}
+
+/* =================================================================
+   CORE ANIMATIONS & EFFECTS
+   ================================================================= */
+@keyframes shiny {
+  0% {
+    left: -100%;
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    left: 200%;
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(191, 139, 85, 0.2);
+  }
+
+  50% {
+    box-shadow: 0 0 25px rgba(191, 139, 85, 0.4);
+  }
+}
+
+@keyframes batman-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.1), inset 0 0 10px rgba(255, 215, 0, 0.05);
+  }
+
+  50% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.25), inset 0 0 20px rgba(255, 215, 0, 0.1);
+  }
+}
+
+@keyframes float-subtle {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Utility Classes */
+.shiny-element {
+  position: relative;
+  overflow: hidden;
+}
+
+.shiny-element::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right,
+      transparent 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      transparent 100%);
+  transform: skewX(-25deg);
+  animation: shiny 4s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+/* =================================================================
+   BASE TYPOGRAPHY & LAYOUT
+   ================================================================= */
+body {
+  @apply antialiased text-sand-900 bg-sand-50;
+  font-family: "Outfit", sans-serif;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(232, 219, 197, 0.4) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(219, 194, 160, 0.4) 0px, transparent 50%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23a67342' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "DM Serif Display", serif;
+  letter-spacing: 0.01em;
+}
+
+/* Enhanced Gradient Text */
+.text-premium-gradient {
+  background: linear-gradient(135deg, #8c5e35 0%, #bf8b55 30%, #8c5e35 60%, #5c3b20 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 8s linear infinite;
+}
+
+/* =================================================================
+   BATMAN THEME (THE DARK KNIGHT)
+   ================================================================= */
+.batman-theme {
+  --color-sand-50: #030303;
+  /* Void Black */
+  --color-sand-100: #0a0a0a;
+  --color-sand-800: #e0e0e0;
+  --color-sand-900: #ffffff;
+
+  /* Neon Gold */
+  --color-gold: #ffd700;
+  --color-gold-dim: #b39700;
+
+  background-image:
+    linear-gradient(to bottom, #000000 0%, #080808 100%),
+    radial-gradient(circle at 50% 0%, rgba(255, 215, 0, 0.05), transparent 60%);
+}
+
+.batman-theme body {
+  color: #ededed;
+}
+
+/* Batman Text Overrides */
+.batman-theme h1,
+.batman-theme h2,
+.batman-theme h3 {
+  color: #ffffff;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+.batman-theme .text-premium-gradient {
+  background: linear-gradient(135deg, #ffd700 0%, #fff 50%, #ffd700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.batman-theme p,
+.batman-theme small {
+  color: #a0a0a0 !important;
+}
+
+/* Batman Cards: Tech/Armor Feel */
+.batman-theme .card,
+.batman-theme .card-glass,
+.batman-theme header,
+.batman-theme nav {
+  background: rgba(10, 10, 10, 0.85) !important;
+  border: 1px solid rgba(255, 215, 0, 0.15) !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 1), inset 0 0 20px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(20px);
+}
+
+.batman-theme .card:hover {
+  border-color: rgba(255, 215, 0, 0.5) !important;
+  box-shadow:
+    0 0 20px rgba(255, 215, 0, 0.1),
+    inset 0 0 10px rgba(255, 215, 0, 0.05) !important;
+  transform: translateY(-2px);
+}
+
+/* Batman Inputs */
+.batman-theme input {
+  background: #000 !important;
+  border: 1px solid #333 !important;
+  color: #ffd700 !important;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.8) !important;
+}
+
+.batman-theme input:focus {
+  border-color: #ffd700 !important;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.2) !important;
+}
+
+/* Batman Calendar - The "Pop" */
+.batman-theme .calendar-day-full {
+  background: linear-gradient(135deg, #ffd700, #b8860b) !important;
+  color: #000 !important;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.6) !important;
+  animation: batman-pulse 3s infinite;
+  border: none !important;
+}
+
+.batman-theme .calendar-day-partial {
+  background: #333 !important;
+  border: 1px solid #555 !important;
+  box-shadow: none !important;
+}
+
+.batman-theme .calendar-day-empty {
+  background: #111 !important;
+  border: 1px solid #222 !important;
+}
+
+.batman-theme .calendar-day-future {
+  opacity: 0.2;
+}
+
+
+/* =================================================================
+   COMPONENT CLASSES (The "Wow" Factor)
+   ================================================================= */
+
+/* Glass Cards (Light Theme) */
+.bg-premium-texture {
+  position: relative;
+}
+
+.bg-premium-texture::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at top left, rgba(166, 115, 66, 0.05), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.card-glass {
+  @apply rounded-2xl transition-all duration-500 relative overflow-hidden;
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: var(--shadow-premium);
+}
+
+.card-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.card-glass:hover {
+  transform: translateY(-4px) scale(1.005);
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow-premium-hover);
+}
+
+/* Buttons */
+.btn-primary {
+  @apply relative rounded-xl font-bold tracking-wide overflow-hidden transition-all duration-300;
+  background: linear-gradient(135deg, #bf8b55 0%, #8c5e35 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(140, 94, 53, 0.4);
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  border: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(140, 94, 53, 0.6);
+  background: linear-gradient(135deg, #d4a36e 0%, #a67342 100%);
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: skewX(-20deg);
+  transition: 0.5s;
+}
+
+.btn-primary:hover::after {
+  animation: shiny 1.5s ease-out;
+}
+
+/* Batman Buttons */
+.batman-theme .btn-primary {
+  background: linear-gradient(135deg, #ffd700, #daa520) !important;
+  color: black !important;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4) !important;
+}
+
+.batman-theme .btn-primary:hover {
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.7) !important;
+  transform: translateY(-2px);
+}
+
+/* Calendar Day Styles */
+.calendar-day-full {
+  background-color: #bf8b55;
+  box-shadow: 0 4px 10px rgba(191, 139, 85, 0.4);
+}
+
+.calendar-day-partial {
+  background-color: #e8dbc5;
+}
+
+.calendar-day-empty {
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(232, 219, 197, 0.5);
+}
+
+.calendar-day-future {
+  background-color: transparent;
+  border: 1px dashed rgba(200, 200, 200, 0.5);
+  opacity: 0.4;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d6bc96;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #bf8b55;
+}
