@@ -132,8 +132,18 @@ export default function Dashboard({ onLogout }: DashboardProps) {
     };
 
 
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 20);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
-        <div className="min-h-screen bg-transparent relative overflow-hidden">
+        <div className="min-h-screen bg-transparent relative">
             {/* Floating Decorative Orbs */}
             <div className="fixed inset-0 pointer-events-none overflow-hidden">
                 <div className="orb orb-1" style={{ top: '-10%', left: '-5%' }}></div>
@@ -156,12 +166,20 @@ export default function Dashboard({ onLogout }: DashboardProps) {
             </div>
 
             {/* Floating Glass Header */}
-            <div className="sticky top-2 sm:top-4 z-20 px-3 sm:px-6 lg:px-8 mb-4 sm:mb-8">
+            {/* Floating Glass Header */}
+            <div className={`sticky z-20 px-3 sm:px-6 lg:px-8 mb-4 sm:mb-8 transition-all duration-700 ease-out ${isScrolled ? 'top-2' : 'top-6 sm:top-7'
+                }`}>
                 <div className="relative max-w-7xl mx-auto group">
-                    {/* Subtle outer glow */}
-                    <div className="absolute -inset-0.5 bg-gradient-to-r from-sand-200/20 via-white/30 to-sand-200/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+                    {/* Subtle outer glow - only when not scrolled (glass mode) */}
+                    <div className={`absolute -inset-0.5 bg-gradient-to-r from-sand-200/20 via-white/30 to-sand-200/20 rounded-2xl blur transition duration-500 ${isScrolled ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'
+                        }`}></div>
 
-                    <header className="card-glass relative shiny-element hover:translate-y-0">
+                    <header className={`relative transition-all duration-500 hover:translate-y-0 rounded-2xl ${isScrolled
+                        ? isBatman
+                            ? 'bg-black/60 backdrop-blur-md border border-white/5 shadow-lg'
+                            : 'bg-white/30 backdrop-blur-md border border-white/20 shadow-sm'
+                        : 'card-glass shiny-element'
+                        }`}>
                         <div className="px-3 sm:px-6 lg:px-8 py-2 sm:py-3">
                             <div className="flex flex-col gap-2 sm:gap-4 md:flex-row md:items-center md:justify-between md:gap-0">
 
@@ -179,7 +197,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
                                                 "H"
                                             )}
                                         </div>
-                                        <h1 className="text-base sm:text-xl font-bold tracking-tight text-premium-gradient drop-shadow-sm">Habit Tracker</h1>
+                                        <h1 className="text-base sm:text-3xl font-bold tracking-tight text-premium-gradient drop-shadow-sm">Habit Tracker</h1>
                                     </div>
                                     <button
                                         onClick={handleLogout}
