@@ -27,7 +27,7 @@ export default function AddHabitModal({ onClose, onAdd }: AddHabitModalProps) {
             const existingHabits = await getAllHabits();
             const normalize = (s: string) => s.trim().toLowerCase();
             const isDuplicate = existingHabits.some(
-                h => normalize(h.name) === normalize(habitName)
+                h => normalize(h.name) === normalize(habitName) && h.active !== false
             );
 
             if (isDuplicate) {

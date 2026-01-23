@@ -77,40 +77,52 @@ export function calculateStreak(
         return { current: 0, longest: 0 };
     }
 
+    const todayStr = formatDate(new Date());
+    const yesterdayStr = formatDate(subDays(new Date(), 1));
+    const lastCompletionDate = habitCompletions[0].date;
+
+    // Check if the streak is active (completed today OR yesterday)
+    const isStreakActive = lastCompletionDate === todayStr || lastCompletionDate === yesterdayStr;
+
     let currentStreak = 0;
-    let longestStreak = 0;
-    let tempStreak = 0;
-    let expectedDate = new Date();
 
-    // Calculate current streak
-    for (const completion of habitCompletions) {
-        const expectedDateStr = formatDate(expectedDate);
+    if (isStreakActive) {
+        let expectedDate = new Date(lastCompletionDate);
 
-        if (completion.date === expectedDateStr) {
-            currentStreak++;
-            expectedDate = subDays(expectedDate, 1);
-        } else {
-            break;
+        for (const completion of habitCompletions) {
+            const expectedDateStr = formatDate(expectedDate);
+
+            if (completion.date === expectedDateStr) {
+                currentStreak++;
+                expectedDate = subDays(expectedDate, 1);
+            } else {
+                break;
+            }
         }
     }
 
     // Calculate longest streak
+    let longestStreak = 0;
+    let tempStreak = 0;
     let lastDate: Date | null = null;
-    for (const completion of habitCompletions) {
+
+    // Sort ascending for longest streak calculation
+    const ascendingCompletions = [...habitCompletions].sort((a, b) => a.date.localeCompare(b.date));
+
+    for (const completion of ascendingCompletions) {
         const completionDate = parseISO(completion.date);
 
         if (lastDate === null) {
             tempStreak = 1;
         } else {
-            const daysDiff = differenceInDays(lastDate, completionDate);
+            const daysDiff = differenceInDays(completionDate, lastDate);
             if (daysDiff === 1) {
                 tempStreak++;
-            } else {
+            } else if (daysDiff > 1) {
                 longestStreak = Math.max(longestStreak, tempStreak);
                 tempStreak = 1;
             }
         }
-
         lastDate = completionDate;
     }
     longestStreak = Math.max(longestStreak, tempStreak);

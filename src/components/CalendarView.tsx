@@ -107,7 +107,7 @@ export default function CalendarView({ habits, completions }: CalendarViewProps)
                     </div>
 
                     {/* Mini Stats */}
-                    <div className="grid grid-cols-3 gap-2 sm:gap-4 w-full sm:w-auto text-center">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-4 w-full sm:w-auto text-center">
                         {/* Perfect */}
                         <div className={`px-3 sm:px-4 py-2 sm:py-3 rounded-xl transition-all duration-300 border ${isBatman
                             ? 'bg-gray-800 text-gray-300 border-gray-700 shadow-sm'
@@ -127,16 +127,6 @@ export default function CalendarView({ habits, completions }: CalendarViewProps)
                                 {monthStats.partial}
                             </p>
                             <p className="text-xs font-bold uppercase tracking-wider opacity-80">Partial</p>
-                        </div>
-                        {/* Success */}
-                        <div className={`px-3 sm:px-4 py-2 sm:py-3 rounded-xl transition-all duration-300 border ${isBatman
-                            ? 'bg-yellow-400 text-black border-yellow-500 shadow-[0_0_15px_rgba(250,204,21,0.3)]'
-                            : 'bg-sand-800 text-white border-sand-900 shadow-md'
-                            }`}>
-                            <p className="text-xl sm:text-2xl md:text-3xl font-bold stat-number">
-                                {monthStats.total > 0 ? Math.round((monthStats.perfect / monthStats.total) * 100) : 0}%
-                            </p>
-                            <p className="text-xs font-bold uppercase tracking-wider opacity-80">Success</p>
                         </div>
                     </div>
                 </div>

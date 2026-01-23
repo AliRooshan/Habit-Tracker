@@ -302,7 +302,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {currentView === 'today' && (
                     <TodayView
-                        habits={habits}
+                        habits={habits.filter(h => h.active !== false)}
                         completions={completions}
                         onDataChange={loadData}
                     />

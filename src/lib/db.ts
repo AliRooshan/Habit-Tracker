@@ -17,7 +17,8 @@ export async function getAllHabits(): Promise<Habit[]> {
     return (data || []).map((h: any) => ({
         id: h.id,
         name: h.name,
-        createdAt: h.created_at
+        createdAt: h.created_at,
+        active: h.active ?? true
     }));
 }
 
@@ -41,16 +42,31 @@ export async function getHabit(id: string): Promise<Habit | undefined> {
 }
 
 export async function addHabit(habit: Habit): Promise<void> {
-    // We ignore the ID passed in habit because Supabase generates UUIDs
-    // But for optimistic UI or local consistency we might want to respect it if possible, 
-    // though Supabase usually handles IDs.
-    // The current app generates UUIDs on the client. We can just use that.
+    // Check if habit exists (even if archived) to restore it
+    const { data: existing } = await supabase
+        .from('habits')
+        .select('*')
+        .eq('name', habit.name)
+        .maybeSingle();
 
+    if (existing) {
+        // Restore existing habit
+        const { error } = await supabase
+            .from('habits')
+            .update({ active: true })
+            .eq('id', existing.id);
+
+        if (error) console.error('Error restoring habit:', error);
+        return;
+    }
+
+    // Create new habit
     const { error } = await supabase
         .from('habits')
         .insert([{
             name: habit.name,
-            created_at: habit.createdAt
+            created_at: habit.createdAt,
+            active: true
         }]);
 
     if (error) {
@@ -58,15 +74,31 @@ export async function addHabit(habit: Habit): Promise<void> {
     }
 }
 
-export async function deleteHabit(id: string): Promise<void> {
+export async function deleteHabit(id: string, hardDelete: boolean = false): Promise<void> {
+    if (hardDelete) {
+        // Hard delete: Remove from DB completely
+        await supabase.from('completions').delete().eq('habit_id', id);
+        const { error } = await supabase.from('habits').delete().eq('id', id);
+
+        if (error) console.error('Error deleting habit:', error);
+    } else {
+        // Soft delete: Mark as inactive
+        const { error } = await supabase
+            .from('habits')
+            .update({ active: false })
+            .eq('id', id);
+
+        if (error) console.error('Error archiving habit:', error);
+    }
+}
+
+export async function restoreHabit(id: string): Promise<void> {
     const { error } = await supabase
         .from('habits')
-        .delete()
+        .update({ active: true })
         .eq('id', id);
 
-    if (error) {
-        console.error('Error deleting habit:', error);
-    }
+    if (error) console.error('Error restoring habit:', error);
 }
 
 // Completion CRUD operations
@@ -76,7 +108,7 @@ export async function getCompletion(habitId: string, date: string): Promise<Comp
         .select('*')
         .eq('habit_id', habitId)
         .eq('date', date)
-        .single();
+        .maybeSingle();
 
     if (error || !data) return undefined;
 
