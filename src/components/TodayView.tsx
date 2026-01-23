@@ -62,14 +62,77 @@ export default function TodayView({ habits, completions, onDataChange }: TodayVi
                 {/* Subtle shimmer overlay handled by shiny-element class */}
 
                 <div className="relative z-10 grid grid-cols-2 md:grid-cols-3 items-center gap-4 md:gap-8">
-                    {/* Left Column: Mini Calendar (Centered) */}
-                    <div className="col-span-2 md:col-span-1 flex justify-center items-center">
+                    {/* Center Column: Text (Date) - Mobile: Top Left (Order 1) */}
+                    <div className="order-1 md:order-2 col-span-2 md:col-span-1 text-center">
+                        <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-premium-gradient tracking-tight mb-0.5 sm:mb-1">
+                            {format(new Date(), 'EEEE')}
+                        </h2>
+                        <h3 className={`text-sm sm:text-xl md:text-2xl font-bold mb-0.5 sm:mb-1 ${isBatman ? 'text-gray-300' : 'text-brown-600'}`}>
+                            {format(new Date(), 'MMMM do')}
+                        </h3>
+                    </div>
+
+                    {/* Right Column: Ring - Mobile: Top Right (Order 2) */}
+                    <div className="order-3 md:order-3 col-span-1 md:col-span-1 flex justify-center items-center">
+                        {/* Completion Ring */}
+                        <div className="relative w-30 h-30 sm:w-40 sm:h-40 md:w-48 md:h-48 flex-shrink-0 group-hover:scale-105 transition-transform duration-500">
+                            {/* Enhanced Glow */}
+                            <div className={`absolute inset-0 rounded-full blur-xl transition-all duration-700 ${completionPercentage === 100
+                                ? isBatman ? 'bg-yellow-300/40' : 'bg-amber-200/50'
+                                : isBatman ? 'bg-yellow-400/20' : 'bg-amber-300/30'
+                                }`}></div>
+
+                            <svg className="transform -rotate-90 w-full h-full relative z-10 drop-shadow-lg" viewBox="0 0 120 120">
+                                {/* Background circle */}
+                                <circle
+                                    cx="60"
+                                    cy="60"
+                                    r="50"
+                                    stroke="currentColor"
+                                    strokeWidth="12"
+                                    fill="transparent"
+                                    className={`transition-colors duration-300 ${isBatman ? 'text-gray-800' : 'text-stone-200'}`}
+                                />
+                                {/* Progress circle */}
+                                {completionPercentage > 0 && (
+                                    <circle
+                                        cx="60"
+                                        cy="60"
+                                        r="50"
+                                        stroke={isBatman ? 'url(#progressGradientDarkLight)' : 'url(#progressGradientLight)'}
+                                        strokeWidth="12"
+                                        fill="transparent"
+                                        strokeDasharray={`${2 * Math.PI * 50}`}
+                                        strokeDashoffset={`${2 * Math.PI * 50 * (1 - completionPercentage / 100)}`}
+                                        className="transition-all duration-1000 ease-out"
+                                        strokeLinecap={completionPercentage < 2 ? "round" : "round"}
+                                    />
+                                )}
+                                <defs>
+                                    <linearGradient id="progressGradientLight" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stopColor="#e6c9a8" /> {/* Lighter beige/brown */}
+                                        <stop offset="100%" stopColor="#bfa07a" />
+                                    </linearGradient>
+                                    <linearGradient id="progressGradientDarkLight" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stopColor="#fff5cc" /> {/* Very light gold */}
+                                        <stop offset="100%" stopColor="#ffeb99" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div className="absolute inset-0 flex items-center justify-center z-20">
+                                <span className={`text-xl sm:text-4xl md:text-5xl font-black tracking-tighter ${isBatman ? 'text-yellow-200 drop-shadow-md' : 'text-stone-600'
+                                    }`}>
+                                    {Math.round(completionPercentage)}%
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Left Column: Mini Calendar - Mobile: Bottom (Order 3, Full Width) */}
+                    <div className="order-2 md:order-1 col-span-1 md:col-span-1 flex justify-center items-center">
                         <div className="flex flex-col items-center gap-2">
-                            <p className={`text-[10px] sm:text-sm font-bold uppercase tracking-wider ${isBatman ? 'text-gold-400' : 'text-brown-700'
-                                }`}>
-                                {currentDate.toLocaleDateString('en-US', { month: 'long' })}
-                            </p>
-                            <div className={`p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl shadow-xl border-2 backdrop-blur-md ${isBatman
+
+                            <div className={`p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-xl shadow-xl border-2 backdrop-blur-md ${isBatman
                                 ? 'bg-gray-900/50 border-gray-700 hover:border-gold-500/50'
                                 : 'bg-white/50 border-stone-200 hover:border-brown-400/50'
                                 } transition-colors duration-300`}>
@@ -129,7 +192,7 @@ export default function TodayView({ habits, completions, onDataChange }: TodayVi
                                             <div
                                                 key={index}
                                                 className={`
-                                            w-3 h-3 sm:w-5 sm:h-5 md:w-6 md:h-6 rounded-md transition-all duration-300 flex items-center justify-center
+                                            w-4.5 h-4.5 sm:w-5 sm:h-5 md:w-6 md:h-6 rounded-md transition-all duration-300 flex items-center justify-center
                                             ${bgClass} ${shadowClass} ${ringClass} ${borderClass}
                                             ${future ? 'opacity-40 cursor-default' : 'cursor-pointer hover:scale-110'}
                                         `}
@@ -140,75 +203,6 @@ export default function TodayView({ habits, completions, onDataChange }: TodayVi
                                         );
                                     })}
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Center Column: Text (Centered) */}
-                    <div className="col-span-1 md:col-span-1 text-center">
-                        <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-premium-gradient tracking-tight mb-0.5 sm:mb-1">
-                            {format(new Date(), 'EEEE')}
-                        </h2>
-                        <h3 className={`text-sm sm:text-xl md:text-2xl font-bold mb-0.5 sm:mb-1 ${isBatman ? 'text-gray-300' : 'text-brown-600'}`}>
-                            {format(new Date(), 'MMMM do')}
-                        </h3>
-                        <p className={`text-[10px] sm:text-sm font-bold uppercase tracking-widest opacity-80 ${isBatman ? 'text-gray-500' : 'text-brown-400'}`}>
-                            Goals for Today
-                        </p>
-                    </div>
-
-                    {/* Right Column: Ring (Centered) */}
-                    <div className="col-span-1 md:col-span-1 flex justify-center items-center">
-                        {/* Completion Ring */}
-                        <div className="relative w-20 h-20 sm:w-40 sm:h-40 md:w-48 md:h-48 flex-shrink-0 group-hover:scale-105 transition-transform duration-500">
-                            {/* Enhanced Glow */}
-                            <div className={`absolute inset-0 rounded-full blur-xl transition-all duration-700 ${completionPercentage === 100
-                                ? isBatman ? 'bg-yellow-300/40' : 'bg-amber-200/50'
-                                : isBatman ? 'bg-yellow-400/20' : 'bg-amber-300/30'
-                                }`}></div>
-
-                            <svg className="transform -rotate-90 w-full h-full relative z-10 drop-shadow-lg" viewBox="0 0 120 120">
-                                {/* Background circle */}
-                                <circle
-                                    cx="60"
-                                    cy="60"
-                                    r="50"
-                                    stroke="currentColor"
-                                    strokeWidth="12"
-                                    fill="transparent"
-                                    className={`transition-colors duration-300 ${isBatman ? 'text-gray-800' : 'text-stone-200'}`}
-                                />
-                                {/* Progress circle */}
-                                {completionPercentage > 0 && (
-                                    <circle
-                                        cx="60"
-                                        cy="60"
-                                        r="50"
-                                        stroke={isBatman ? 'url(#progressGradientDarkLight)' : 'url(#progressGradientLight)'}
-                                        strokeWidth="12"
-                                        fill="transparent"
-                                        strokeDasharray={`${2 * Math.PI * 50}`}
-                                        strokeDashoffset={`${2 * Math.PI * 50 * (1 - completionPercentage / 100)}`}
-                                        className="transition-all duration-1000 ease-out"
-                                        strokeLinecap={completionPercentage < 2 ? "round" : "round"}
-                                    />
-                                )}
-                                <defs>
-                                    <linearGradient id="progressGradientLight" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stopColor="#e6c9a8" /> {/* Lighter beige/brown */}
-                                        <stop offset="100%" stopColor="#bfa07a" />
-                                    </linearGradient>
-                                    <linearGradient id="progressGradientDarkLight" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stopColor="#fff5cc" /> {/* Very light gold */}
-                                        <stop offset="100%" stopColor="#ffeb99" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
-                            <div className="absolute inset-0 flex items-center justify-center z-20">
-                                <span className={`text-xl sm:text-4xl md:text-5xl font-black tracking-tighter ${isBatman ? 'text-yellow-200 drop-shadow-md' : 'text-stone-600'
-                                    }`}>
-                                    {Math.round(completionPercentage)}%
-                                </span>
                             </div>
                         </div>
                     </div>

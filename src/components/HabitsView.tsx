@@ -79,7 +79,7 @@ export default function HabitsView({ habits, onDataChange }: HabitsViewProps) {
                             </div>
                             <button
                                 onClick={() => handleDeleteClick(habit)}
-                                className="p-2 text-brown-400 hover:text-red-500 hover:bg-red-50/80 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 hover:shadow-[0_4px_12px_rgba(239,68,68,0.25)] hover:scale-110"
+                                className="p-2 text-brown-400 hover:text-red-500 hover:bg-red-50/80 rounded-xl opacity-100 sm:opacity-0 group-hover:opacity-100 transition-all duration-300 hover:shadow-[0_4px_12px_rgba(239,68,68,0.25)] hover:scale-110"
                                 title="Delete Habit"
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
