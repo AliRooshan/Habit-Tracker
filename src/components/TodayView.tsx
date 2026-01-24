@@ -64,10 +64,10 @@ export default function TodayView({ habits, completions, onDataChange }: TodayVi
                 <div className="relative z-10 grid grid-cols-2 md:grid-cols-3 items-center gap-4 md:gap-8">
                     {/* Center Column: Text (Date) - Mobile: Top Left (Order 1) */}
                     <div className="order-1 md:order-2 col-span-2 md:col-span-1 text-center">
-                        <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-premium-gradient tracking-tight mb-0.5 sm:mb-1">
+                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-premium-gradient tracking-tight mb-0.5 sm:mb-1">
                             {format(new Date(), 'EEEE')}
                         </h2>
-                        <h3 className={`text-sm sm:text-xl md:text-2xl font-bold mb-0.5 sm:mb-1 ${isBatman ? 'text-gray-300' : 'text-brown-600'}`}>
+                        <h3 className={`text-md sm:text-xl md:text-2xl font-bold mb-0.5 sm:mb-1 ${isBatman ? 'text-gray-300' : 'text-brown-600'}`}>
                             {format(new Date(), 'MMMM do')}
                         </h3>
                     </div>

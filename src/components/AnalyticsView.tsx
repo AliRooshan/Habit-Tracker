@@ -95,14 +95,14 @@ export default function AnalyticsView({ habits, completions }: AnalyticsViewProp
                                 <div className="flex-1 flex flex-col justify-center min-w-0">
                                     <div className="flex flex-col items-center justify-center space-y-1 sm:space-y-3 w-full">
                                         <div className="grid grid-cols-2 gap-1 w-full">
-                                            <div className={`flex flex-col items-center justify-center p-1.5 sm:p-2 rounded-xl border transition-all duration-300 group/stat h-full text-center hover:-translate-y-1 hover:shadow-lg ${isBatman ? 'bg-gray-900/50 border-gray-700 backdrop-blur-md' : 'bg-white/60 border-sand-200/50 backdrop-blur-md'}`}>
-                                                <p className={`text-[7px] sm:text-xs mb-0.5 font-bold uppercase tracking-wide ${isBatman ? 'text-gray-400' : 'text-brown-600'}`}>Total</p>
+                                            <div className={`flex flex-col items-center justify-center p-1.5 sm:p-2 rounded-lg sm:rounded-xl border transition-all duration-300 group/stat h-full text-center hover:-translate-y-1 hover:shadow-lg ${isBatman ? 'bg-gray-900/50 border-gray-700 backdrop-blur-md' : 'bg-white/60 border-sand-200/50 backdrop-blur-md'}`}>
+                                                <p className={`text-[6px] sm:text-xs mb-0.5 font-bold tracking-wide ${isBatman ? 'text-gray-400' : 'text-brown-600'}`}>Total</p>
                                                 <p className={`text-xs sm:text-lg font-black stat-number ${isBatman ? 'text-yellow-400' : 'text-brown-900'}`}>
                                                     {stat.totalDays}
                                                 </p>
                                             </div>
-                                            <div className={`flex flex-col items-center justify-center p-1.5 sm:p-2 rounded-xl border transition-all duration-300 group/stat h-full text-center hover:-translate-y-1 hover:shadow-lg ${isBatman ? 'bg-gray-900/50 border-gray-700 backdrop-blur-md' : 'bg-white/60 border-sand-200/50 backdrop-blur-md'}`}>
-                                                <p className={`text-[7px] sm:text-xs mb-0.5 font-bold uppercase tracking-wide ${isBatman ? 'text-gray-400' : 'text-brown-600'}`}>Done</p>
+                                            <div className={`flex flex-col items-center justify-center p-1.5 sm:p-2 rounded-lg sm:rounded-xl border transition-all duration-300 group/stat h-full text-center hover:-translate-y-1 hover:shadow-lg ${isBatman ? 'bg-gray-900/50 border-gray-700 backdrop-blur-md' : 'bg-white/60 border-sand-200/50 backdrop-blur-md'}`}>
+                                                <p className={`text-[6px] sm:text-xs mb-0.5 font-bold tracking-wide ${isBatman ? 'text-gray-400' : 'text-brown-600'}`}>Done</p>
                                                 <p className={`text-xs sm:text-lg font-black stat-number ${isBatman ? 'text-yellow-400' : 'text-brown-900'}`}>
                                                     {stat.completedDays}
                                                 </p>
