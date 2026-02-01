@@ -136,12 +136,20 @@ export default function AnalyticsView({ habits, completions }: AnalyticsViewProp
                                             {monthDays.map((day, dIndex) => {
                                                 const habit = habits.find(h => h.id === stat.habitId);
                                                 const habitCreated = habit ? startOfDay(parseISO(habit.createdAt)) : today;
+                                                const archiveDate = habit?.archivedAt ? startOfDay(parseISO(habit.archivedAt)) : null;
+
                                                 const isBeforeStart = isBefore(day, habitCreated);
+                                                const isAfterArchive = archiveDate ? isBefore(archiveDate, day) : false;
+
                                                 const isDateCompleted = completions.some(c => c.habitId === stat.habitId && c.completed && isSameDay(parseISO(c.date), day));
-                                                const isMissed = !isDateCompleted && !isBeforeStart && isBefore(day, startOfDay(today));
+                                                const isMissed = !isDateCompleted && !isBeforeStart && !isAfterArchive && isBefore(day, startOfDay(today));
 
                                                 let bgClass = isBatman ? 'bg-gray-800' : 'bg-sand-300';
-                                                if (isBeforeStart) bgClass = isBatman ? 'bg-white opacity-30' : 'bg-sand-200 opacity-70';
+
+                                                if (isBeforeStart || isAfterArchive) {
+                                                    bgClass = isBatman ? 'bg-white opacity-10' : 'bg-sand-200 opacity-40'; // Dimmer for invalid days
+                                                    // Optionally make them invisible or completely different style
+                                                }
                                                 else if (isDateCompleted) bgClass = 'bg-green-300 border border-green-700';
                                                 else if (isMissed) bgClass = 'bg-red-300 border border-red-700';
 

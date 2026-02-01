@@ -18,7 +18,8 @@ export async function getAllHabits(): Promise<Habit[]> {
         id: h.id,
         name: h.name,
         createdAt: h.created_at,
-        active: h.active ?? true
+        active: h.active ?? true,
+        archivedAt: h.archived_at
     }));
 }
 
@@ -37,7 +38,9 @@ export async function getHabit(id: string): Promise<Habit | undefined> {
     return {
         id: data.id,
         name: data.name,
-        createdAt: data.created_at
+        createdAt: data.created_at,
+        active: data.active ?? true,
+        archivedAt: data.archived_at
     };
 }
 
@@ -53,7 +56,7 @@ export async function addHabit(habit: Habit): Promise<void> {
         // Restore existing habit
         const { error } = await supabase
             .from('habits')
-            .update({ active: true })
+            .update({ active: true, archived_at: null })
             .eq('id', existing.id);
 
         if (error) console.error('Error restoring habit:', error);
@@ -66,7 +69,8 @@ export async function addHabit(habit: Habit): Promise<void> {
         .insert([{
             name: habit.name,
             created_at: habit.createdAt,
-            active: true
+            active: true,
+            archived_at: null
         }]);
 
     if (error) {
@@ -82,10 +86,13 @@ export async function deleteHabit(id: string, hardDelete: boolean = false): Prom
 
         if (error) console.error('Error deleting habit:', error);
     } else {
-        // Soft delete: Mark as inactive
+        // Soft delete: Mark as inactive and set archived timestamp
         const { error } = await supabase
             .from('habits')
-            .update({ active: false })
+            .update({
+                active: false,
+                archived_at: new Date().toISOString()
+            })
             .eq('id', id);
 
         if (error) console.error('Error archiving habit:', error);
@@ -95,7 +102,10 @@ export async function deleteHabit(id: string, hardDelete: boolean = false): Prom
 export async function restoreHabit(id: string): Promise<void> {
     const { error } = await supabase
         .from('habits')
-        .update({ active: true })
+        .update({
+            active: true,
+            archived_at: null
+        })
         .eq('id', id);
 
     if (error) console.error('Error restoring habit:', error);

@@ -5,6 +5,7 @@ export interface Habit {
     name: string;
     createdAt: string; // ISO date string
     active?: boolean;
+    archivedAt?: string | null; // ISO date string or null
 }
 
 export interface Completion {

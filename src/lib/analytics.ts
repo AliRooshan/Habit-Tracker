@@ -167,12 +167,19 @@ export function getMonthlyHabitStats(
     const monthEnd = startOfDay(endOfMonth(monthDate));
     const today = startOfDay(new Date());
 
+    // Determine cutoff date (archive date or null)
+    const archiveDate = habit.archivedAt ? startOfDay(parseISO(habit.archivedAt)) : null;
+
     // Filter completions for this month
     // Note: We use endOfMonth(monthDate) (original 23:59) for filtering to include the whole last day
     const completionMonthEnd = endOfMonth(monthDate);
     const habitCompletions = completions.filter(c => {
         if (c.habitId !== habit.id || !c.completed) return false;
         const completionDate = parseISO(c.date);
+
+        // If archived, don't count completions after archive date
+        if (archiveDate && completionDate > archiveDate) return false;
+
         return completionDate >= monthStart && completionDate <= completionMonthEnd;
     });
 
@@ -189,10 +196,39 @@ export function getMonthlyHabitStats(
         effectiveEndDate = today;
     }
 
-    // If habit was created after the month ended (or after today if looking at current month context), total days is 0.
+    // If habit is archived, cap the effectiveEndDate at the archive date
+    if (archiveDate && archiveDate < effectiveEndDate) {
+        effectiveEndDate = archiveDate;
+    }
+
+    // If habit was created after the month ended (or after effective end), returns 0
+    if (effectiveStartDate > effectiveEndDate) {
+        return {
+            habitId: habit.id,
+            habitName: habit.name,
+            totalDays: 0,
+            completedDays: 0,
+            currentStreak: 0,
+            longestStreak: 0,
+            completionRate: 0
+        };
+    }
 
     // If we are viewing future months
     if (monthStart > today) {
+        return {
+            habitId: habit.id,
+            habitName: habit.name,
+            totalDays: 0,
+            completedDays: 0,
+            currentStreak: 0,
+            longestStreak: 0,
+            completionRate: 0
+        };
+    }
+
+    // If the entire relevant period is after archive date (e.g. viewing next month after archive)
+    if (archiveDate && effectiveStartDate > archiveDate) {
         return {
             habitId: habit.id,
             habitName: habit.name,
