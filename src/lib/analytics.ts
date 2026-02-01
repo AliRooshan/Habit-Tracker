@@ -1,4 +1,4 @@
-import { format, subDays, startOfDay, parseISO, differenceInDays } from 'date-fns';
+import { format, subDays, startOfDay, parseISO, differenceInDays, startOfMonth, endOfMonth, isBefore } from 'date-fns';
 import type { Habit, Completion, DayData, HabitStats } from '../types';
 
 // Get today's date in YYYY-MM-DD format
@@ -155,7 +155,81 @@ export function getHabitStats(
     };
 }
 
-// Get all habit statistics
+// Get statistics for a specific habit for a specific month
+// Get statistics for a specific habit for a specific month
+export function getMonthlyHabitStats(
+    habit: Habit,
+    completions: Completion[],
+    monthDate: Date
+): HabitStats {
+    const monthStart = startOfMonth(monthDate);
+    // Use startOfDay for monthEnd to ensure consistent day difference calculation
+    const monthEnd = startOfDay(endOfMonth(monthDate));
+    const today = startOfDay(new Date());
+
+    // Filter completions for this month
+    // Note: We use endOfMonth(monthDate) (original 23:59) for filtering to include the whole last day
+    const completionMonthEnd = endOfMonth(monthDate);
+    const habitCompletions = completions.filter(c => {
+        if (c.habitId !== habit.id || !c.completed) return false;
+        const completionDate = parseISO(c.date);
+        return completionDate >= monthStart && completionDate <= completionMonthEnd;
+    });
+
+    const completedDays = habitCompletions.length;
+
+    // Calculate total days
+    // Start count from either the 1st of the month OR the habit creation date (whichever is later)
+    const habitCreatedDate = startOfDay(parseISO(habit.createdAt));
+    const effectiveStartDate = habitCreatedDate > monthStart ? habitCreatedDate : monthStart;
+
+    // For current month, we want count up to today. For past months, up to end of month.
+    let effectiveEndDate = monthEnd;
+    if (isBefore(today, monthEnd)) {
+        effectiveEndDate = today;
+    }
+
+    // If habit was created after the month ended (or after today if looking at current month context), total days is 0.
+
+    // If we are viewing future months
+    if (monthStart > today) {
+        return {
+            habitId: habit.id,
+            habitName: habit.name,
+            totalDays: 0,
+            completedDays: 0,
+            currentStreak: 0,
+            longestStreak: 0,
+            completionRate: 0
+        };
+    }
+
+    let totalDays = differenceInDays(effectiveEndDate, effectiveStartDate) + 1;
+    if (totalDays < 0) totalDays = 0;
+
+    const streaks = calculateStreak(habit.id, completions);
+
+    return {
+        habitId: habit.id,
+        habitName: habit.name,
+        totalDays,
+        completedDays,
+        currentStreak: streaks.current,
+        longestStreak: streaks.longest,
+        completionRate: totalDays > 0 ? Math.round((completedDays / totalDays) * 100) : 0,
+    };
+}
+
+// Get all habit statistics for a specific month
+export function getAllMonthlyHabitStats(
+    habits: Habit[],
+    completions: Completion[],
+    monthDate: Date
+): HabitStats[] {
+    return habits.map(habit => getMonthlyHabitStats(habit, completions, monthDate));
+}
+
+// Get all habit statistics (Legacy/All-time)
 export function getAllHabitStats(
     habits: Habit[],
     completions: Completion[]

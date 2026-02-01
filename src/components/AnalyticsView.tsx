@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isBefore, parseISO, startOfDay, format, addMonths, subMonths } from 'date-fns';
 import type { Habit, Completion } from '../types';
-import { getAllHabitStats } from '../lib/analytics';
+import { getAllMonthlyHabitStats } from '../lib/analytics';
 import { getMonthName } from '../lib/utils';
 
 interface AnalyticsViewProps {
@@ -11,9 +11,9 @@ interface AnalyticsViewProps {
 }
 
 export default function AnalyticsView({ habits, completions }: AnalyticsViewProps) {
-    const habitStats = getAllHabitStats(habits, completions);
     const { isBatman } = useTheme();
     const [currentMonth, setCurrentMonth] = useState(new Date());
+    const habitStats = getAllMonthlyHabitStats(habits, completions, currentMonth);
 
     const today = new Date();
     const monthStart = startOfMonth(currentMonth);
